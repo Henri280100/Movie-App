@@ -1,11 +1,19 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { getAllMovies } from "../../features/movies/movieSlice";
+import { getAllMovies, getAllShows } from "../../features/movies/movieSlice";
 import MovieCard from "../MovieCard/MovieCard";
-
+import "./MovieListing.scss";
+import Slider from "react-slick";
+import { Settings } from "../../common/setting";
 const MovieListing = () => {
+
+  
+
+
   const movies = useSelector(getAllMovies);
+  const shows = useSelector(getAllShows);
   let renderMovies = "";
+  let renderShows = "";
 
   renderMovies =
     movies.Response === "True" ? (
@@ -18,11 +26,28 @@ const MovieListing = () => {
       </div>
     );
 
+  renderShows =
+    shows.Response === "True" ? (
+      shows.Search.map((movie, index) => <MovieCard key={index} data={movie} />)
+    ) : (
+      <div className="shows-error">
+        <h3>{shows.Error}</h3>
+      </div>
+    );
+
   return (
     <div className="movie-wrapper">
       <div className="movie-list">
         <h2>Movies</h2>
-        <div className="movie-container">{renderMovies}</div>
+        <div className="movie-container">
+          <Slider {...Settings}>{renderMovies}</Slider>
+        </div>
+      </div>
+      <div className="show-list">
+        <h2>Shows</h2>
+        <Slider {...Settings}>{renderShows}</Slider>
+
+        
       </div>
     </div>
   );
